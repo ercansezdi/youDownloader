@@ -1,23 +1,23 @@
-from pytube import YouTube
-indirme_link = "https://www.youtube.com/watch?v=HirFutbbIWg&list=RDHirFutbbIWg&start_radio=1"
+from tkinter import *
 
-baglan = YouTube(indirme_link)
-baslik = baglan.streams.all()
-quatlity = []
-for i in baslik:
-   if str(i).find("mp4",17) != -1:
-      k = str(i).split('res="')
-      try:
-         if k[1][3].isnumeric() and k[1][0].isnumeric():
-            cozunurluk = k[1][0] + k[1][1] + k[1][2] + k[1][3]
+def sel():
+   selection = "You selected the option " + str(var.get())
+   label.config(text = selection)
 
-            if not(cozunurluk in quatlity) and cozunurluk != "Non":
-               quatlity.append(cozunurluk)
-         else:
-            cozunurluk = k[1][0] + k[1][1] + k[1][2]
+root = Tk()
+var = IntVar()
+R1 = Radiobutton(root, text="Option 1", variable=var, value=1,
+                  command=sel)
+R1.pack( anchor = W )
 
-            if not(cozunurluk in quatlity) and cozunurluk != "Non":
-               quatlity.append(cozunurluk)
-      except:
-         pass
-print(quatlity)
+R2 = Radiobutton(root, text="Option 2", variable=var, value=2,
+                  command=sel)
+R2.pack( anchor = W )
+
+R3 = Radiobutton(root, text="Option 3", variable=var, value=3,
+                  command=sel)
+R3.pack( anchor = W)
+
+label = Label(root)
+label.pack()
+root.mainloop()
