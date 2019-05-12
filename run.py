@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 from tkinter import *
 from pytube import YouTube
 from threading import Thread
@@ -20,14 +22,13 @@ class downloader(Frame):
         self.yaziRengi = 'blue'
         self.yaziTipi = "Helvetica 20 bold italic"
         self.yaziTipiText = "Helvetica 12 bold italic"
-        # delete
-        self.kaydetme_adres = "C:\\Users\\trfrever\\Desktop\\project\\youtube_downloader"
-        self.indirme_link = ""
-
         self.parent.configure(background=self.arkaPlanRenk)#,cursor = 'none')
         self.textVar = StringVar()
         self.var = IntVar()
         self.sart = False
+        self.quatlity_cozunurluk = False
+        self.link = "https://www.youtube.com/watch?v=HirFutbbIWg"
+        self.kayit_adres = "C:\\Users\\trfrever\\Desktop\\project\\youtube_downloader"
         self.ekran()
 
     def ekran(self):
@@ -60,7 +61,6 @@ class downloader(Frame):
                           wraplength=523,anchor = 'center',width = 35)
         self.text2.grid(row=5,column=0,sticky=W, padx=0 ,  pady = 30,columnspan=3,rowspan=1)
         self.textVar.set('@auther Ercan Sezdi')
-        ################################### Listbox ####################################
 
     def on_dogrula(self):
         yazilar = Thread(target=self.yazi,args = (True,))
@@ -71,13 +71,11 @@ class downloader(Frame):
     def yazi(self,value):
         if value == True :
             self.textVar.set('Link Doğrulanıyor...')
-        else:
-            self.textVar.set('indiriliyor...')
     def dogrula(self):
         try:
 
             #self.link = self.giris.get()
-            self.link = "https://www.youtube.com/watch?v=BxuY9FET9Y4"
+
             if self.link != '':
                 self.baglan = YouTube(self.link)
                 baslik = self.baglan.streams.all()
@@ -101,29 +99,25 @@ class downloader(Frame):
                 self.sart = True
                 self.quatlity.sort()
                 if len(self.quatlity) > 0:
-                    self.R1 = Radiobutton(self.frame_radioButton, text=self.quatlity[0], variable=self.var, value=int(self.quatlity[0]),
+                    self.R1 = Radiobutton(self.frame_radioButton, text=str(self.quatlity[0]) + "p", variable=self.var, value=int(self.quatlity[0]),
                                      command=self.ayar)
                     self.R1.grid(row=0,column=0)
                 if len(self.quatlity) > 1:
-                    self.R2 = Radiobutton(self.frame_radioButton, text=self.quatlity[1], variable=self.var, value=int(self.quatlity[1]),
+                    self.R2 = Radiobutton(self.frame_radioButton, text=str(self.quatlity[1]) + "p", variable=self.var, value=int(self.quatlity[1]),
                                      command=self.ayar)
                     self.R2.grid(row=0, column=1)
                 if len(self.quatlity) > 2:
-                    self.R3 = Radiobutton(self.frame_radioButton, text=self.quatlity[2], variable=self.var, value=int(self.quatlity[2]),
+                    self.R3 = Radiobutton(self.frame_radioButton, text=str(self.quatlity[2]) + "p", variable=self.var, value=int(self.quatlity[2]),
                                      command=self.ayar)
                     self.R3.grid(row=0, column=2)
                 if len(self.quatlity) > 3:
-                    self.R4 = Radiobutton(self.frame_radioButton, text=self.quatlity[3], variable=self.var, value=int(self.quatlity[3]),
+                    self.R4 = Radiobutton(self.frame_radioButton, text=str(self.quatlity[3]) + "p", variable=self.var, value=int(self.quatlity[3]),
                                      command=self.ayar)
                     self.R4.grid(row=0, column=3)
                 if len(self.quatlity) > 4:
-                    self.R5 = Radiobutton(self.frame_radioButton, text=self.quatlity[4], variable=self.var, value=int(self.quatlity[4]),
+                    self.R5 = Radiobutton(self.frame_radioButton, text=str(self.quatlity[4]) + "p", variable=self.var, value=int(self.quatlity[4]),
                                      command=self.ayar)
                     self.R5.grid(row=0, column=4)
-                if len(self.quatlity) > 5:
-                    self.R6 = Radiobutton(self.frame_radioButton, text=self.quatlity[5], variable=self.var, value=int(self.quatlity[5]),
-                                     command=self.ayar)
-                    self.R6.grid(row=0, column=5)
             else:
                 self.textVar.set('Linki boş bırakma')
         except :
@@ -134,32 +128,26 @@ class downloader(Frame):
             self.indir()
     def ayar(self):
         self.quatlity_cozunurluk = self.var.get()
-        print("XX",self.quatlity_cozunurluk)
     def baslat(self):
-        print("YY",self.quatlity_cozunurluk)
-        self.link = "https://www.youtube.com/watch?v=BxuY9FET9Y4"
-        self.baglan = YouTube(self.link)
-        self.indirme_link = self.baglan.streams.first()
-        self.indirme_link.download()#self.kayit_adres
-        self.frame_2.grid_remove()
-        self.frame_1.grid(row=0, column=0)
-
-    def ara_baslat(self):
-        self.adres.grid_remove()
-        self.button4.grid_remove()
-        self.baslat()
+        if self.quatlity_cozunurluk != False:
+            self.baglan = YouTube(self.link).streams
+            print(str(self.quatlity_cozunurluk)+"p")
+            print(self.baglan.filter(fps= 30,file_extension='mp4',res = str(self.quatlity_cozunurluk)+"p"))
+            self.baglan.filter(fps= 30,file_extension='mp4',res = str(self.quatlity_cozunurluk)+"p").last().download(self.kayit_adres,str(self.quatlity_cozunurluk)+"p")
+            self.frame_2.grid_remove()
+            self.frame_1.grid(row=0, column=0)
+            self.quatlity_cozunurluk = False
 
     def on_baslat(self):
 
         try:
             #self.kayit_adres = self.adres.get()
-            self.kayit_adres ="C:\\Users\\trfrever\\Desktop\\project\\youtube_downloader"
             if self.kayit_adres != '':
                 if not(os.path.exists(self.kayit_adres)):
                     self.textVar.set('Adres hatalı')
                 else:
                     yazilar = Thread(target=self.yazi,args = (False,))
-                    dogrulama = Thread(target=self.ara_baslat)
+                    dogrulama = Thread(target=self.baslat)
                     dogrulama.start()
                     yazilar.start()
             else:
